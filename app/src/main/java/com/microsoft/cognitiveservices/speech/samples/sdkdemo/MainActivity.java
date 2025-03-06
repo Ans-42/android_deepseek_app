@@ -4,12 +4,16 @@
 //
 package com.microsoft.cognitiveservices.speech.samples.sdkdemo;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -35,6 +39,7 @@ import android.media.AudioAttributes;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -90,13 +95,33 @@ public class MainActivity extends AppCompatActivity {
     private MicrophoneStream createMicrophoneStream() {
         this.releaseMicrophoneStream();
 
-        microphoneStream = new MicrophoneStream();
+        try {
+            microphoneStream = new MicrophoneStream(this);
+        } catch (SecurityException  e) {
+            Log.e("MicrophoneStream", "权限错误：" + e.getMessage());
+            Toast.makeText(this, "需要录音权限", Toast.LENGTH_LONG).show();
+        }
         return microphoneStream;
     }
     private void releaseMicrophoneStream() {
         if (microphoneStream != null) {
             microphoneStream.close();
             microphoneStream = null;
+        }
+    }
+
+    // 处理用户的权限请求结果
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 5) { // permissionRequestId
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("SpeechSDK", "Microphone permission granted");
+            } else {
+                Log.e("SpeechSDK", "Microphone permission denied");
+                Toast.makeText(this, "需要麦克风权限才能录音", Toast.LENGTH_LONG).show();
+            }
         }
     }
 

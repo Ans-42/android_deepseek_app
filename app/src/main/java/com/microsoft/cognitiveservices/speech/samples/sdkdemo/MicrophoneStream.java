@@ -4,10 +4,15 @@
 //
 package com.microsoft.cognitiveservices.speech.samples.sdkdemo;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.util.Log;
+
+import androidx.core.content.ContextCompat;
 
 import com.microsoft.cognitiveservices.speech.audio.PullAudioInputStreamCallback;
 import com.microsoft.cognitiveservices.speech.audio.AudioStreamFormat;
@@ -21,8 +26,10 @@ public class MicrophoneStream extends PullAudioInputStreamCallback {
     private final static int SAMPLE_RATE = 16000;
     private final AudioStreamFormat format;
     private AudioRecord recorder;
+    private final Context context; // 添加 Context 变量
 
-    public MicrophoneStream() {
+    public MicrophoneStream(Context context) {
+        this.context = context;
         this.format = AudioStreamFormat.getWaveFormatPCM(SAMPLE_RATE, (short)16, (short)1);
         this.initMic();
     }
@@ -47,6 +54,11 @@ public class MicrophoneStream extends PullAudioInputStreamCallback {
     }
 
     private void initMic() {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            throw new SecurityException("需要 RECORD_AUDIO 权限");
+        }
+
         // Note: currently, the Speech SDK support 16 kHz sample rate, 16 bit samples, mono (single-channel) only.
         AudioFormat af = new AudioFormat.Builder()
                 .setSampleRate(SAMPLE_RATE)
