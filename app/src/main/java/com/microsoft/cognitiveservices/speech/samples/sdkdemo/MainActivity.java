@@ -70,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
     //
 
     // Replace below with your own subscription key
-    private static final String SpeechSubscriptionKey = "xxxx";
+    private static final String SpeechSubscriptionKey = "xxxxxxxxxxxx";  // azure 语音服务 API key
 
-    private static final String SpeechRegion = "xxxx";
+    private static final String SpeechRegion = "eastasia"; // 地区选 eastasia
     final SpeechConfig speechConfig=SpeechConfig.fromSubscription(SpeechSubscriptionKey, SpeechRegion);
     static int no_reg_count=0;
     //
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Replace below with your own Keyword model file, kws.table model file is configured for "Computer" keyword
-    private static final String KwsModelFile = "kws.table";
+    private static final String KwsModelFile = "kws.table"; // 唤醒关键词
     private KeywordRecognitionModel kwsModel;
 
     private TextView recognizedTextView;

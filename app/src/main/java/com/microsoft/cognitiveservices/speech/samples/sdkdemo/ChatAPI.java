@@ -50,11 +50,11 @@ public class ChatAPI {
         //requestBody.put("tool_choice", "auto");
         requestBody.put("stream", false);
 
-        URL url = new URL("https://api.deepseek.com/chat/completions"); // Replace with actual API endpoint
+        URL url = new URL("https://api.deepseek.com/chat/completions"); // API endpoint
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("Authorization", "Bearer xxxx"); // Replace with actual API key
+        connection.setRequestProperty("Authorization", "Bearer xxxxxxxxxxxx"); // 这里放 API key
         connection.setDoOutput(true);
 
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()))) {
